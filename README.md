@@ -1,3 +1,13 @@
+# Customized Leela Zero with simple ladder detector
+
+Usage: `leelaz --ladderlen 3 ...`
+
+* [What is this?](https://github.com/gcp/leela-zero/pull/1941)
+* [Diff from master](https://github.com/gcp/leela-zero/compare/master...kaorahi:ladder_updated)
+* Applied patches
+[1](https://github.com/kaorahi/leela-zero/commit/19801725689491ecd0972b2a8729b738be1c30fa)
+[2](https://github.com/kaorahi/leela-zero/commit/46635e3d22225e92b0d6e0a147152f341ef1dbaf)
+
 [![Linux Build Status](https://travis-ci.org/gcp/leela-zero.svg?branch=next)](https://travis-ci.org/gcp/leela-zero)
 [![Windows Build Status](https://ci.appveyor.com/api/projects/status/pf1hcgly8f1a8iu0/branch/next?svg=true)](https://ci.appveyor.com/project/gcp/leela-zero/branch/next)
 
