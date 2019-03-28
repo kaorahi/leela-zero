@@ -76,6 +76,7 @@ public:
     int get_visits() const;
     float get_policy() const;
     void set_policy(float policy);
+    void set_move(int move);
     float get_eval_variance(float default_var = 0.0f) const;
     float get_eval(int tomove) const;
     float get_raw_eval(int tomove, int virtual_loss = 0) const;
@@ -94,6 +95,8 @@ public:
     UCTNode* get_first_child() const;
     UCTNode* get_nopass_child(FastState& state) const;
     std::unique_ptr<UCTNode> find_child(const int move);
+    void replace_child(const int move, UCTNode& node);
+
     void inflate_all_children();
 
     void clear_expand_state();

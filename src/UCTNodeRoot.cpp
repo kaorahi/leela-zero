@@ -197,6 +197,16 @@ std::unique_ptr<UCTNode> UCTNode::find_child(const int move) {
     return nullptr;
 }
 
+void UCTNode::replace_child(const int move, UCTNode& node) {
+    for (auto& child : m_children) {
+        if (child.get_move() == move) {
+            node.set_policy(child.get_policy());
+            child.replace(node);
+            break;
+        }
+    }
+}
+
 void UCTNode::inflate_all_children() {
     for (const auto& node : get_children()) {
         node.inflate();

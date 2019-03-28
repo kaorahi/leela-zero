@@ -126,9 +126,26 @@ bool UCTSearch::advance_to_new_rootstate() {
         int(m_rootstate.get_movenum() - m_last_rootstate->get_movenum());
 
     if (depth < 0) {
-        return false;
-    }
+        for (auto i = 0; i < - depth; i++) {
+            const auto move = m_last_rootstate->get_last_move();
+            m_root->set_move(move);
+            m_last_rootstate->undo_move();
+            auto oldroot = std::move(m_root);
+            m_root = std::make_unique<UCTNode>(FastBoard::PASS, 0.0f);
+            m_root->prepare_root_node(m_network, m_last_rootstate->board.get_to_move(),
+                                      m_nodes, *m_last_rootstate);
+            m_root->replace_child(move, *oldroot.release());
+        }
 
+        if (m_rootstate.board.get_hash() != m_last_rootstate->board.get_hash()) {
+            // m_rootstate and m_last_rootstate don't match
+          return false;
+        }
+
+        assert(m_rootstate.get_movenum() == m_last_rootstate->get_movenum());
+
+        return true;
+    }
 
     auto test = std::make_unique<GameState>(m_rootstate);
     for (auto i = 0; i < depth; i++) {

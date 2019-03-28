@@ -119,6 +119,26 @@ void UCTNodePointer::inflate() const {
     }
 }
 
+void UCTNodePointer::replace(UCTNode& node) const {
+    while (true) {
+        auto v = m_data.load();
+        // if (is_inflated(v)) return;
+
+        auto v2 = reinterpret_cast<std::uint64_t>(
+            &node
+        ) | POINTER;
+        bool success = m_data.compare_exchange_strong(v, v2);
+        if (success) {
+            increment_tree_size(sizeof(UCTNode));
+            return;
+        } else {
+            // this means that somebody else also modified this instance.
+            // Try again next time
+            delete read_ptr(v2);
+        }
+    }
+}
+
 bool UCTNodePointer::valid() const {
     auto v = m_data.load();
     if (is_inflated(v)) return read_ptr(v)->valid();

@@ -238,6 +238,10 @@ void UCTNode::set_policy(float policy) {
     m_policy = policy;
 }
 
+void UCTNode::set_move(int move) {
+    m_move = move;
+}
+
 float UCTNode::get_eval_variance(float default_var) const {
     return m_visits > 1 ? m_squared_eval_diff / (m_visits - 1) : default_var;
 }
