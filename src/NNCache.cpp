@@ -78,6 +78,18 @@ void NNCache::insert(std::uint64_t hash,
     }
 }
 
+void NNCache::replace(std::uint64_t hash,
+                      const Netresult& result) {
+    std::lock_guard<std::mutex> lock(m_mutex);
+
+    if (m_cache.find(hash) == m_cache.end()) {
+        return;  // Not in the cache.
+    }
+
+    m_cache.erase(hash);
+    m_cache.emplace(hash, std::make_unique<Entry>(result));
+}
+
 void NNCache::resize(int size) {
     m_size = size;
     while (m_order.size() > m_size) {

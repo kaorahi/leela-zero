@@ -731,6 +731,10 @@ bool Network::probe_cache(const GameState* const state,
     return false;
 }
 
+void Network::reverse_transfer(std::uint64_t hash, Network::Netresult& result) {
+    m_nncache.replace(hash, result);
+}
+
 Network::Netresult Network::get_output(
     const GameState* const state, const Ensemble ensemble, const int symmetry,
     const bool read_cache, const bool write_cache, const bool force_selfcheck) {

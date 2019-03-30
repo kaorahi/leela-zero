@@ -126,6 +126,37 @@ bool UCTSearch::advance_to_new_rootstate() {
         int(m_rootstate.get_movenum() - m_last_rootstate->get_movenum());
 
     if (depth < 0) {
+        const auto color = m_last_rootstate->get_to_move();
+        const auto board = m_last_rootstate->board;
+        const auto boardsize = board.get_boardsize();
+        const auto hash = board.get_hash();
+        const auto total_visits = m_root->get_visits();
+        const auto eval = m_root->get_raw_eval(color);
+        Network::Netresult result;
+        result.winrate = (color == FastBoard::WHITE) ? eval : 1.0f - eval;
+        float policy_sum = 0.0;
+        for (const auto& child : m_root->get_children()) {
+            if (child->get_visits() > 0) {
+                policy_sum += child->get_policy();
+            }
+        }
+        for (const auto& child : m_root->get_children()) {
+            const auto visits = child->get_visits();
+            const auto policy = (visits == 0) ? child->get_policy() :
+                policy_sum * visits / total_visits;
+            const auto move = child->get_move();
+            if (move == FastBoard::RESIGN) {
+                // do nothing
+            } else if (move == FastBoard::PASS) {
+                result.policy_pass = policy;
+            } else {
+                const auto xy = board.get_xy(move);
+                const auto x = xy.first, y = xy.second;
+                const auto idx = x + y * boardsize;
+                result.policy[idx] = policy;
+            }
+        }
+        m_network.reverse_transfer(hash, result);
         return false;
     }
 
