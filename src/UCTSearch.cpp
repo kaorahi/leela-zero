@@ -133,7 +133,7 @@ bool UCTSearch::advance_to_new_rootstate() {
         const auto total_visits = m_root->get_visits();
         const auto eval = m_root->get_raw_eval(color);
         Network::Netresult result;
-        result.winrate = (color == FastBoard::WHITE) ? eval : 1.0f - eval;
+        result.winrate = eval;
         float policy_sum = 0.0;
         for (const auto& child : m_root->get_children()) {
             if (child->get_visits() > 0) {
