@@ -1,3 +1,11 @@
+# Customized Leela Zero for game analysis
+
+This is a modified Leela Zero with some hacks
+that will ease frustrations in game analysis.
+
+* Skip middle parts of ladders. (Try one more move as long as a ladder-like pattern is continued.) [ref.](https://github.com/gcp/leela-zero/pull/1941)
+* Don't forget promising moves after undo. (Reverse-transfer search results to NNCache.) [ref.](https://github.com/leela-zero/leela-zero/issues/2305)
+
 [![Linux Build Status](https://travis-ci.org/leela-zero/leela-zero.svg?branch=next)](https://travis-ci.org/leela-zero/leela-zero)
 [![Windows Build Status](https://ci.appveyor.com/api/projects/status/dcvp31x1e0yavrtf/branch/next?svg=true)](https://ci.appveyor.com/project/gcp/leela-zero-8arv1/branch/next)
 
