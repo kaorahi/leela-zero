@@ -297,8 +297,18 @@ void UCTNode::accumulate_eval(float eval) {
     atomic_add(m_blackevals, double(eval));
 }
 
-UCTNode* UCTNode::uct_select_child(int color, bool is_root) {
+UCTNode* UCTNode::uct_select_child(int color, bool is_root, int undone_move) {
     wait_expanded();
+
+    // Select undone move first.
+    if (undone_move != FastBoard::PASS) {
+        for (const auto& child : m_children) {
+            if (child.get_move() == undone_move) {
+              child.inflate();
+              return child.get();
+            }
+        }
+    }
 
     // Count parentvisits manually to avoid issues with transpositions.
     auto total_visited_policy = 0.0f;

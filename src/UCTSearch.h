@@ -149,6 +149,8 @@ private:
     std::list<Utils::ThreadGroup> m_delete_futures;
 
     Network & m_network;
+
+    int m_undone_move{FastBoard::PASS};
 };
 
 class UCTWorker {

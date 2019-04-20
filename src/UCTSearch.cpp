@@ -127,7 +127,9 @@ bool UCTSearch::advance_to_new_rootstate() {
     auto depth =
         int(m_rootstate.get_movenum() - m_last_rootstate->get_movenum());
 
+    m_undone_move = FastBoard::PASS;
     if (depth == -1) {
+        m_undone_move = m_last_rootstate->get_last_move();
         reverse_transfer_along_pv(*m_last_rootstate, *m_root);
     }
 
@@ -318,8 +320,9 @@ SearchResult UCTSearch::play_simulation(GameState & currstate,
     }
 
     if (node->has_children() && !result.valid()) {
-        auto next = node->uct_select_child(color, node == m_root.get());
+        auto next = node->uct_select_child(color, node == m_root.get(), m_undone_move);
         auto move = next->get_move();
+        m_undone_move = FastBoard::PASS;
 
         currstate.play_move(move);
         if (move != FastBoard::PASS && currstate.superko()) {
