@@ -216,6 +216,7 @@ void UCTSearch::reverse_transfer_along_pv(FastState & state, UCTNode& parent) {
 }
 
 void UCTSearch::reverse_transfer(FastState & state, UCTNode& node) {
+    const int SUFFICIENT_VISITS = 100;
     const auto color = state.get_to_move();
     const auto board = state.board;
     const auto boardsize = board.get_boardsize();
@@ -226,14 +227,14 @@ void UCTSearch::reverse_transfer(FastState & state, UCTNode& node) {
     result.winrate = eval;
     float policy_sum = 0.0;
     for (const auto& child : node.get_children()) {
-        if (child.get_visits() > 0) {
+        if (child.get_visits() >= SUFFICIENT_VISITS) {
             policy_sum += child.get_policy();
         }
     }
     for (const auto& child : node.get_children()) {
         const auto visits = child.get_visits();
-        const auto policy = (visits == 0) ? child.get_policy() :
-            policy_sum * visits / total_visits;
+        const auto policy = (visits >= SUFFICIENT_VISITS) ?
+            policy_sum * visits / total_visits : child.get_policy();
         const auto move = child.get_move();
         if (move == FastBoard::RESIGN) {
             // do nothing
