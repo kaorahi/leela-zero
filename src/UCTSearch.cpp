@@ -128,7 +128,7 @@ bool UCTSearch::advance_to_new_rootstate() {
         int(m_rootstate.get_movenum() - m_last_rootstate->get_movenum());
 
     if (depth == -1) {
-        reverse_transfer(*m_last_rootstate, *m_root);
+        reverse_transfer_along_pv(*m_last_rootstate, *m_root);
     }
 
     if (depth < 0) {
@@ -186,6 +186,33 @@ bool UCTSearch::advance_to_new_rootstate() {
     }
 
     return true;
+}
+
+void UCTSearch::reverse_transfer_along_pv(FastState & state, UCTNode& parent) {
+    if (!parent.has_children()) {
+        return;
+    }
+
+    if (parent.expandable()) {
+        // Not fully expanded. This means someone could expand
+        // the node while we want to traverse the children.
+        // Avoid the race conditions and don't go through the rabbit hole
+        // of trying to print things from this node.
+        return;
+    }
+
+    reverse_transfer(state, parent);
+
+    auto& best_child = parent.get_best_root_child(state.get_to_move());
+    if (best_child.first_visit()) {
+        return;
+    }
+    auto best_move = best_child.get_move();
+    auto res = state.move_to_text(best_move);
+
+    state.play_move(best_move);
+
+    reverse_transfer_along_pv(state, best_child);
 }
 
 void UCTSearch::reverse_transfer(FastState & state, UCTNode& node) {
