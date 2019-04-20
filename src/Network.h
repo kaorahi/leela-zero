@@ -94,6 +94,7 @@ public:
                    const int iterations = 1600);
     static void show_heatmap(const FastState * const state,
                              const Netresult & netres, const bool topmoves);
+    static void show_endstate_map(const Netresult & netres);
 
     static std::vector<float> gather_features(const GameState* const state,
                                               const int symmetry);
