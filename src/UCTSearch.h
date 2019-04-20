@@ -132,6 +132,7 @@ private:
     int get_best_move(passflag_t passflag);
     void update_root();
     bool advance_to_new_rootstate();
+    void reverse_transfer(FastState & state, UCTNode& node);
     void output_analysis(FastState & state, UCTNode & parent);
 
     GameState & m_rootstate;
