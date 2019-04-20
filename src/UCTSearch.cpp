@@ -127,7 +127,7 @@ bool UCTSearch::advance_to_new_rootstate() {
     auto depth =
         int(m_rootstate.get_movenum() - m_last_rootstate->get_movenum());
 
-    if (depth < 0) {
+    if (depth == -1) {
         const auto color = m_last_rootstate->get_to_move();
         const auto board = m_last_rootstate->board;
         const auto boardsize = board.get_boardsize();
@@ -159,6 +159,9 @@ bool UCTSearch::advance_to_new_rootstate() {
             }
         }
         m_network.reverse_transfer(hash, result);
+    }
+
+    if (depth < 0) {
         return false;
     }
 
