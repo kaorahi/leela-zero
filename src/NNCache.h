@@ -82,6 +82,10 @@ public:
     void insert(std::uint64_t hash,
                 const Netresult& result);
 
+    // Replace an existing entry.
+    void replace(std::uint64_t hash,
+                 const Netresult& result);
+
     // Return the hit rate ratio.
     std::pair<int, int> hit_rate() const {
         return {m_hits, m_lookups};

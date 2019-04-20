@@ -80,6 +80,7 @@ public:
                          const bool read_cache = true,
                          const bool write_cache = true,
                          const bool force_selfcheck = false);
+    void reverse_transfer(std::uint64_t hash, Netresult& result);
 
     static constexpr auto INPUT_MOVES = 8;
     static constexpr auto INPUT_CHANNELS = 2 * INPUT_MOVES + 2;
